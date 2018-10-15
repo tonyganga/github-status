@@ -8,15 +8,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// define routes
-var routes = Routes{
-	Route{
-		"GET",
-		"/status",
-		GithubStatusHandler,
-	},
-}
-
 func server() {
 	// init router
 	r := mux.NewRouter().StrictSlash(true)
