@@ -11,3 +11,23 @@ type Route struct {
 
 // Routes is how we add routers.
 type Routes []Route
+
+// The actual routes.
+
+var myRoutes = Routes{
+	Route{
+		"GET",
+		"/health",
+		HealthCheckHandler,
+	},
+	Route{
+		"GET",
+		"/status",
+		GithubStatusHandler,
+	},
+	Route{
+		"GET",
+		"/",
+		IndexHandler,
+	},
+}
