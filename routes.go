@@ -12,9 +12,9 @@ type Route struct {
 // Routes is how we add routers.
 type Routes []Route
 
-// The actual routes.
+// Endpoints to define the Route struct above.
 
-var myRoutes = Routes{
+var endpoints = Routes{
 	Route{
 		"GET",
 		"/health",
