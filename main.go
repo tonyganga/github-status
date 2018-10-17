@@ -12,8 +12,8 @@ func main() {
 	// init router
 	r := mux.NewRouter().StrictSlash(true)
 
-	// create routes defined in routes.go
-	for _, item := range myRoutes {
+	// create endpoints defined in routes.go
+	for _, item := range endpoints {
 		r.
 			Methods(item.Method).
 			Path(item.Pattern).
