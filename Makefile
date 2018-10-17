@@ -19,5 +19,8 @@ darwin:
 windows:
 	GOOS=windows GOARCH=${GOARCH} go build -v -o ${CURRENT_DIR}/bin/windows-${GOARCH}/${BINARY}.exe . ;\
 
+test:
+	go test -v
+
 .PHONY: all setup clean env linux darwin windows
 
