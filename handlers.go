@@ -12,7 +12,6 @@ type Github struct {
 	Status      string `json:"status"`
 	LastUpdated string `json:"created_on"`
 	LastMessage string `json:"body"`
-	OutageLevel string
 	Available   bool
 }
 
@@ -41,7 +40,6 @@ func GithubStatusHandler(w http.ResponseWriter, r *http.Request) {
 	if github.Status == "good" {
 		log.Printf("Github status is good.")
 		GithubIsAvailable(&github)
-		GithubOutageLevel(&github)
 		output, err := json.Marshal(github)
 		if err != nil {
 			log.Printf("Unable to marshal last-message.json")
@@ -52,7 +50,6 @@ func GithubStatusHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		log.Printf("Github returned an outage state.")
 		GithubIsNotAvailable(&github)
-		GithubOutageLevel(&github)
 		output, err := json.Marshal(github)
 		if err != nil {
 			log.Printf("Unable to marshal last-message.json")
@@ -69,10 +66,6 @@ func GithubIsAvailable(g *Github) {
 
 func GithubIsNotAvailable(g *Github) {
 	g.Available = false
-}
-
-func GithubOutageLevel(g *Github) {
-	g.OutageLevel = g.Status
 }
 
 // This is a fake healthcheck.
