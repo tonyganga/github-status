@@ -22,5 +22,7 @@ windows:
 test:
 	go test -v
 
-.PHONY: all setup clean env linux darwin windows
+build:
+	docker build -t github-status:latest .
 
+.PHONY: all setup clean env linux darwin windows

@@ -10,4 +10,5 @@ COPY Gopkg.toml Gopkg.lock ./
 RUN dep ensure --vendor-only
 COPY . ./
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix nocgo -o /app .
+EXPOSE 8000
 ENTRYPOINT ["/app"]
