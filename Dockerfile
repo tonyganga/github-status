@@ -1,22 +1,29 @@
-# Thank you https://medium.com/@chemidy/create-the-smallest-and-secured-golang-docker-image-based-on-scratch-4752223b7324
-# STEP 1 build executable binary
 FROM golang:alpine as builder
-# Install SSL ca certificates
+# install git, ca-certificates and dep
 RUN apk update && apk add git && apk add ca-certificates
-# Create githubstatususer
+ADD https://github.com/golang/dep/releases/download/v0.4.1/dep-linux-amd64 /usr/bin/dep
+RUN chmod +x /usr/bin/dep
+# create githubstatususer to run the binary
 RUN adduser -D -g '' githubstatususer
-COPY . $GOPATH/src/tonyganga/github-status/
-WORKDIR $GOPATH/src/tonyganga/github-status/
-#get dependancies
-RUN go get -d -v
-#build the binary
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/github-status
+# copy source
+COPY . $GOPATH/src/github-status/
+WORKDIR $GOPATH/src/github-status/
+# set ENV to build binary for scratch
+ENV CGO_ENABLED 0
+ENV GOOS linux
+ENV GOARCH amd64 
+# run dep, test and build
+RUN dep ensure --vendor-only
+RUN go test -v
+RUN go build -a -installsuffix cgo -o /go/bin/github-status
+
 # STEP 2 build a small image
-# start from scratch
 FROM scratch
+# copy certs, user and binary
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /etc/passwd /etc/passwd
-# Copy our static executable
 COPY --from=builder /go/bin/github-status /go/bin/github-status
+# define user
 USER githubstatususer
+# run binary
 ENTRYPOINT ["/go/bin/github-status"]
